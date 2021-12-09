@@ -15,6 +15,16 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
+app.get('/total-reports', (req, res) => {
+    covid_Doc.count( {}, function(err, result) {
+        if(err) {
+            res.send(err)
+        } else {
+            res.json(result)
+        }
+    })
+})
+
 app.get('/all-covid-Data', (req, res) => {
     covid_Doc.find({})
         .then((result) => {
@@ -30,11 +40,11 @@ app.post('/add-data', (req, res) => {
     const newData = new covid_Doc(req.body);
     console.log('New Data = ' + newData);
     newData.save()
-    .then(function(value) {
-        console.log(value);
+    .then(data => {
+        console.log(data);
     })
     .catch(err => {
-        res.status(400).send('Adding new Data failed');
+        res.status(400).send(err);
     })
 })
 
@@ -51,17 +61,20 @@ routes.route('/').get(function(req, res) {
 routes.route('/add-data').post(function(req, res) {
     console.log(req.body);
     const newData = new covid_doc(req.body);
-    console.log('New Covid Data ' + newData)
-    newData.save()
-        .then(docs => {
+    const newDataJSON = JSON.stringify(newData);
+    console.log('New Covid Data ' + newDataJSON)
+    newDataJSON.save()
+        .then(data => {
             res.status(200).json({ 'Data': 'Data added succesfully' })
+            console.log(data);
         })
         .catch(err => {
-            res.status(400).send('adding new data has failed')
+            res.status(400).send(err)
+            console.log(err);
         });
 });
 
-app.use('/docs', routes);
+app.use('/Data', routes);
 
 app.listen(PORT, function() {
     console.log(`Server started ${PORT}`);
