@@ -48,6 +48,20 @@ app.post('/add-data', (req, res) => {
     })
 })
 
+app.post('/delete-data/:id', (req, res) => {
+    const id = req.params.id;
+
+    console.log('Deleting Data from Data List');
+
+    covid_Doc.findByIdAndDelete(id, function(err, docs) {
+        if(err) {
+            console.log(err);
+        } else {
+            res.status(200).send('Data has been Deleted')
+        }
+    })
+});
+
 routes.route('/').get(function(req, res) {
     covid_doc.find(function(err, docs) {
         if(err) {
