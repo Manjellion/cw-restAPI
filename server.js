@@ -22,6 +22,16 @@ app.get('/total-reports', (req, res) => {
         } else {
             res.json(result)
         }
+    });
+});
+
+app.get('/all-data', (req, res) => {
+    covid_Doc.find(function(err, allData) {
+        if (err) {
+            console.log(err);
+        } else {
+            res.json(allData)
+        }
     })
 })
 
@@ -35,6 +45,7 @@ app.get('/all-covid-Data', (req, res) => {
         })
 });
 
+// async is used as data is being manipulated in the mongodb
 app.post('/add-data', (req, res) => {
     console.log(req.body);
     const newData = new covid_Doc(req.body);
@@ -48,18 +59,13 @@ app.post('/add-data', (req, res) => {
     })
 })
 
-app.post('/delete-data/:id', (req, res) => {
-    const id = req.params.id;
-
-    console.log('Deleting Data from Data List');
-
-    covid_Doc.findByIdAndDelete(id, function(err, docs) {
-        if(err) {
-            console.log(err);
-        } else {
-            res.status(200).send('Data has been Deleted')
-        }
-    })
+app.delete("/delete/:id", (req, res) => {
+    covid_Doc.findByIdAndRemove(req.params.id).exec((error, deletedData) => {
+        if (error) {
+            res.send(error)
+        } 
+        return res.json(deletedData);
+    });
 });
 
 routes.route('/').get(function(req, res) {
