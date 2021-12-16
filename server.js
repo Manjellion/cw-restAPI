@@ -45,6 +45,14 @@ app.get('/all-covid-Data', (req, res) => {
         })
 });
 
+app.get('/get-data/:id', (req, res) => {
+    const id = req.params.id;
+    covid_Doc.findById(id, function(err, data) {
+        console.log("Data found " + data);
+        res.json(data)
+    })
+})
+
 // async is used as data is being manipulated in the mongodb
 app.post('/add-data', (req, res) => {
     console.log(req.body);
@@ -58,6 +66,26 @@ app.post('/add-data', (req, res) => {
         res.status(400).send(err);
     })
 })
+
+app.post('/update-data/:id', (req, res) => {
+    const id = req.params.id;
+    const updateData = new covid_Doc(req.body);
+    console.log("Update id " + id + "To New Data " + updateData);
+
+    covid_Doc.findByIdAndUpdate(id, {
+        date: updateData.date,
+        state: updateData.state,
+        cases: updateData.cases,
+        deaths: updateData.deaths
+    }), 
+    function (err, docs) {
+        if(err) {
+            console.log(err);
+        } else {
+            res.status(200).json({'Data': 'Data updated successfully'})
+        }
+    }
+});
 
 app.delete("/delete/:id", (req, res) => {
     covid_Doc.findByIdAndRemove(req.params.id).exec((error, deletedData) => {
