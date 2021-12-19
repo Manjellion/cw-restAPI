@@ -82,7 +82,9 @@ app.put('update/:id', (req,res) => {
     }).then( data =>
         res.json(data)
     ).catch(err =>
-        console.log(err));
+        res.sendStatus(500).send({
+            message: 'Error Updating the Data ' + res.body.id
+        }));
 })
 // delete data by requesting id
 app.delete("/delete/:id", (req, res) => {
