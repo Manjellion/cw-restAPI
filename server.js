@@ -36,8 +36,9 @@ app.get('/all-data', (req, res) => {
     })
 })
 
+
 app.get('/all-covid-Data', (req, res) => {
-    covid_Doc.find({})
+    covid_Doc.find({}).skip( 20 ).limit( 20 )
         .then((result) => {
             res.send(result)
         })
