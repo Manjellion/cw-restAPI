@@ -46,6 +46,7 @@ app.get('/all-covid-Data', (req, res) => {
             console.log(err);
         })
 });
+
 // get specific data
 app.get('/get-data/:id', (req, res) => {
     const id = req.params.id;
