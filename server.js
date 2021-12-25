@@ -27,13 +27,13 @@ app.get('/total-reports', (req, res) => {
 });
 
 app.get('/all-data', (req, res) => {
-    covid_Doc.find(function(err, allData) {
-        if (err) {
+    covid_Doc.find({})
+        .then((result) => {
+            res.send(result)
+        })
+        .catch((err) => {
             console.log(err);
-        } else {
-            res.json(allData)
-        }
-    })
+        })
 })
 
 
